@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useContext, useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -13,26 +12,21 @@ import { themeStyles } from '../../themeStyles';
 export const Card = ({ data, inlineStyles }: { data: ProductoNormal, inlineStyles?: object }) => {
 
     const { theme } = useContext(ThemeContext);
-    const { setStore } = useContext(CarritoContext);
+    const { store, setStore, setPrecioTotalCarrito } = useContext(CarritoContext);
     const [clicked, setClicked] = useState(0);
 
     const { _id, nombre, descripcion, imagen, precio } = data;
 
     useEffect(() => {
         notAdd();
-    }, [])
+    }, [store]);
 
-    const notAdd = async () => {
-        const store = await AsyncStorage.getItem('store');
-
-        if (store) {
-            const idInStore = JSON.parse(store);
-
-            if (idInStore.includes(_id)) {
+    const notAdd = () => {
+        store.filter((prod: ProductoNormal) => {
+            if (prod._id === _id) {
                 setClicked(1);
             }
-        }
-
+        })
     }
 
 
@@ -95,17 +89,11 @@ export const Card = ({ data, inlineStyles }: { data: ProductoNormal, inlineStyle
                                     precio
                                 }
                             ]);
+                        setPrecioTotalCarrito((prevState: number) => prevState + precio!)
                     }
                 }}
             >
-                <Text
-                    style={{
-                        ...styles.buttonText,
-                        ...(theme === 'clear')
-                            ? themeStyles.clearModeText
-                            : themeStyles.darkModeText
-                    }}
-                >
+                <Text style={styles.buttonText}>
                     Añadir al carrito <Icon style={{ fontSize: 18 }} name='chevron-forward' />
                 </Text>
             </TouchableOpacity>
@@ -121,7 +109,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-between',
-        width: '95%',
+        width: '90%',
         backgroundColor: '#fff',
 
         height: 500,
@@ -169,6 +157,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 20,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: 'white'
     }
 })

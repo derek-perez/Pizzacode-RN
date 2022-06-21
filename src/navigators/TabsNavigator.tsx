@@ -1,26 +1,29 @@
 import React, { useContext, useEffect } from 'react';
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { BottomTabNavigationProp, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 
 import { MenuNavigator } from './MenuNavigator';
 import { CuentaNavigator } from './CuentaNavigator';
 
 import { CarritoContext } from '../context/CarritoContext';
+import { UserContext } from '../context/UserContext';
 
 import { HomeScreen } from '../screens/HomeScreen';
 import { SearchScreen } from '../screens/SearchScreen';
 import { CarritoScreen } from '../screens/CarritoScreen';
 import { FixedTop } from '../components/FixedTop';
-import { ProductoNormal } from '../interfaces';
-import pizzaApi from '../api/pizzaApi';
 
 
 const Tab = createBottomTabNavigator();
 
 export const TabsNavigator = () => {
 
+  const { user } = useContext(UserContext);
   const { store } = useContext(CarritoContext);
+  const { navigate } = useNavigation<BottomTabNavigationProp<any, any>>();
+
   let lenght = 0;
 
   if (store) {
@@ -128,8 +131,15 @@ export const TabsNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="CuentaNavigator"        
+        name="CuentaNavigator"
         component={CuentaNavigator}
+        listeners={{
+          focus: () => {
+            if (Object.entries(user).length === 0) {
+              navigate('AuthNavigator');
+            }
+          }
+        }}
         options={{
           headerShown: false,
           tabBarLabel: 'Cuenta',

@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import pizzaApi from '../api/pizzaApi';
 
 import { CardCart } from '../components/carritoScreen/CardCart';
+import { NoHayProductos } from '../components/carritoScreen/NoHayProductos';
 import { ResumenCard } from '../components/carritoScreen/ResumenCard';
 
 import { CarritoContext } from '../context/CarritoContext';
@@ -17,7 +18,7 @@ export const CarritoScreen = () => {
 
   const { theme } = useContext(ThemeContext);
   const { store, productsResume, precioTotalCarrito, setProductsResume } = useContext(CarritoContext);
-  
+
 
   return (
     <ScrollView
@@ -46,7 +47,13 @@ export const CarritoScreen = () => {
         </Text>
 
         {
-          store !== [] && (
+          (!store || store.length === 0) && (
+            <NoHayProductos />
+          )
+        }
+
+        {
+          (store && store !== []) && (
             store.map((producto: any) => (
               <CardCart
                 key={producto._id}
@@ -58,58 +65,66 @@ export const CarritoScreen = () => {
 
       </View>
 
-      <View style={styles.containerResumen}>
-        <Text
-          style={{
-            ...styles.titleResumen,
-            ...(theme === 'clear')
-              ? themeStyles.clearModeTitle
-              : themeStyles.darkModeTitle
-          }}
-        >
-          Resúmen del carrito:
-        </Text>
+      {
+        (store && store.length > 0) && (
+          <View style={styles.containerResumen}>
+            <Text
+              style={{
+                ...styles.titleResumen,
+                ...(theme === 'clear')
+                  ? themeStyles.clearModeTitle
+                  : themeStyles.darkModeTitle
+              }}
+            >
+              Resúmen del carrito:
+            </Text>
 
-        <View style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-          {
-            (store) && (
-              store.map((producto: ProductoNormal) => (
-                <ResumenCard key={producto._id} producto={producto} />
-              ))
-            )
-          }
-        </View>
+            <View style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+              {
+                (store) && (
+                  store.map((producto: ProductoNormal) => (
+                    <ResumenCard key={producto._id} producto={producto} />
+                  ))
+                )
+              }
+            </View>
 
-        <View style={{ borderTopColor: 'rgb(145, 14, 14)', borderTopWidth: 5, marginTop: 20 }}>
-          <Text
-            style={{
-              ...styles.resumenText,
-              ...(theme === 'clear')
-                ? themeStyles.clearModeText
-                : themeStyles.darkModeText
-            }}
+            <View style={{ borderTopColor: 'rgb(145, 14, 14)', borderTopWidth: 5, marginTop: 20 }}>
+              <Text
+                style={{
+                  ...styles.resumenText,
+                  ...(theme === 'clear')
+                    ? themeStyles.clearModeText
+                    : themeStyles.darkModeText
+                }}
+              >
+                <Text>Total:</Text> <Text>${precioTotalCarrito}.00</Text>
+              </Text>
+            </View>
+
+          </View>
+        )
+      }
+
+      {
+        (store && store.length > 0) && (
+          <TouchableOpacity
+            style={styles.button}
+            activeOpacity={0.7}
           >
-            <Text>Total:</Text> <Text>${precioTotalCarrito}.00</Text>
-          </Text>
-        </View>
+            <Text
+              style={{
+                fontSize: 20,
+                textAlign: 'center',
+                color: '#fff'
+              }}
+            >
+              Seguir con el proceso <Icon size={20} name='chevron-forward' />
+            </Text>
+          </TouchableOpacity>
+        )
+      }
 
-      </View>
-
-
-      <TouchableOpacity
-        style={styles.button}
-        activeOpacity={0.7}
-      >
-        <Text
-          style={{
-            fontSize: 20,
-            textAlign: 'center',
-            color: '#fff'
-          }}
-        >
-          Seguir con el proceso <Icon size={20} name='chevron-forward' />
-        </Text>
-      </TouchableOpacity>
 
     </ScrollView>
   )

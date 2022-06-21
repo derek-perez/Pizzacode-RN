@@ -47,7 +47,7 @@ export const PagosScreen = () => {
 
       <View style={styles.pagosContainer}>
         {
-          user.pagos !== [] && (
+          (user && user.pagos !== []) && (
             user.pagos.map((id: string, index: number) => (
               <ReciboComponent key={id} payment={id} index={index} />
             ))

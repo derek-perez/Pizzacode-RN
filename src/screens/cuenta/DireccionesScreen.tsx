@@ -47,7 +47,7 @@ export const DireccionesScreen = () => {
 
       <View style={styles.addressContainer}>
         {
-          user.direcciones !== [] && (
+          (user && user.direcciones !== []) && (
             user.direcciones.map((id: string, index: number) => (
               <DireccionCard key={id} direction={id} index={index} />
             ))

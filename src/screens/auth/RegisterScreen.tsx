@@ -3,15 +3,17 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity, Image, ScrollView 
 
 import Icon from "react-native-vector-icons/Ionicons";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
 
 import { ThemeContext } from "../../context/ThemeContext";
 import { themeStyles } from "../../themeStyles";
 
 
 
-export const RegisterScreen = ({ navigate }: StackNavigationProp<any, any>) => {
+export const RegisterScreen = () => {
 
     const { theme } = useContext(ThemeContext);
+    const { navigate } = useNavigation<StackNavigationProp<any, any>>();
 
     return (
         <ScrollView

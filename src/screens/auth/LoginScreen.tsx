@@ -170,11 +170,11 @@ const styles = StyleSheet.create({
 
         alignItems: 'center',
 
-        paddingTop: 20,
+        paddingTop: 30        
     },
     icon: {
         position: 'absolute',
-        top: 25,
+        top: 30,
         left: 20,
         fontWeight: 'bold',
     },
@@ -182,6 +182,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 35,
         color: 'rgb(145, 14, 14)',
+        marginBottom: 15
     },
 
     contentCard: {

@@ -23,10 +23,9 @@ export const CuentaNavigator = () => {
   const { user, setUser } = useContext(UserContext);
   const { theme } = useContext(ThemeContext);
 
-  if (!user) {
+  if (Object.entries(user).length === 0) {
     navigate('AuthNavigator');
   }
-
 
   return (
     <Drawer.Navigator
@@ -140,12 +139,11 @@ export const CuentaNavigator = () => {
         component={LogoutButton}
         listeners={{
           focus: async () => {
-            await AsyncStorage.removeItem('user');
-            await AsyncStorage.removeItem('token');
-
+            navigate('TabsNavigator');
             setUser({} as UserProps);
 
-            navigate('AuthNavigator');
+            await AsyncStorage.removeItem('user');
+            await AsyncStorage.removeItem('token');
           }
         }}
         options={{

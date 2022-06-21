@@ -49,7 +49,7 @@ export const TarjetasScreen = () => {
 
       <View style={styles.cardContainer}>
         {
-          user.cards !== [] && (
+          (user && user.cards !== []) && (
             user.cards.map((id: string, index: number) => (
               <CreditCardComponent key={id} card={id} index={index} />
             ))

@@ -20,9 +20,6 @@ export const CardCart = ({ data }: { data: ProductoNormal }) => {
     const { _id, nombre, descripcion, imagen, precio } = data;
     const [precioTotal, setPrecioTotal] = useState(precio || 0);
 
-    useEffect(() => {
-        setPrecioTotalCarrito((prev: number) => prev + precioTotal);
-    }, []);
 
     useEffect(() => {
         store.filter((producto: ProductoNormal) => {
@@ -58,22 +55,22 @@ export const CardCart = ({ data }: { data: ProductoNormal }) => {
     }
 
     const deleteProduct = () => {
-        AsyncStorage.getItem('store')
-            .then(res => {
-                const storage = JSON.parse(res || '[]');
-
-                if (storage !== []) {
-                    storage.splice(storage.indexOf(_id), 1);
-
+        if (store !== []) {
+            store.map((prod: ProductoNormal) => {
+                if (prod._id === _id) {
+                    store.splice(store.indexOf(prod), 1);
+    
                     setTimeout(() => {
-                        AsyncStorage.setItem('store', JSON.stringify(storage));
-
-                        setStore([...storage]);
+                        AsyncStorage.setItem('store', JSON.stringify(store));
+    
+                        setPrecioTotalCarrito((prevState: number) => prevState - precioTotal)
+                        setStore([]);
+                        setStore([...store]);
                     }, 250);
                 }
             })
+        }
 
-        setPrecioTotalCarrito((prev: number) => prev - precioTotal);
     }
 
 

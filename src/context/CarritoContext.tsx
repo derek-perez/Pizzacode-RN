@@ -13,16 +13,31 @@ export const CarritoContextProvider = ({ children }: any) => {
     useEffect(() => {
         if (store && store.length > 0) {
             AsyncStorage.setItem('store', JSON.stringify(store));
-
-            setStore(store);
         }
-    }, [store]);
 
+    }, [store]);
+    
     const checkStore = async () => {
+        setPrecioTotalCarrito(0);
+        
         const storePrev = await AsyncStorage.getItem('store');
         const storeProducts = JSON.parse(String(storePrev));
+        
+        const cleanStorage = () => {
+            setStore([]);
+        }
+        const setStorage = () => {
+            setStore(storeProducts);
+            setPrecioTotalCarrito(0);
 
-        return setStore(storeProducts);
+            storeProducts.map((prod: ProductoNormal) => {
+                setPrecioTotalCarrito((prevState: number) => prevState + prod.precio!);
+            })
+        }
+
+        storeProducts
+            ? setStorage()
+            : cleanStorage()
     }
 
 
